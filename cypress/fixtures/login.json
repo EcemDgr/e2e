@@ -1,0 +1,7 @@
+{
+"expected.url":"https://www.edu.goit.global/account/login",
+"username":"user888@gmail.com",
+"expected.titleText":"Login",
+"expected.forgetPassword":"I can't remember the password"
+
+}
