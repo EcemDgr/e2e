@@ -1,0 +1,52 @@
+config:
+  target: "https://api.artic.edu"
+  phases:
+    - duration: 30
+      arrivalRate: 5
+      name: Stress Test | Art Institute API
+
+plugins:
+  ensure:
+    thresholds:
+      - http.response_time.p95: 1000
+      - http.response_time.mean: 800
+      - http.request_rate: 1
+
+scenarios:
+
+  - name: POST search artworks
+    payload:
+      path: "art.edu.csv"
+      fields:
+        - q
+        - is_public_domain
+      order: sequence
+    flow:
+      - post:
+          url: "/api/v1/artworks/search"
+          headers:
+            Content-Type: application/json
+          json:
+            q: "{{ q }}"
+            query:
+              term:
+                is_public_domain: "{{ is_public_domain }}"
+      - log: "POST → q={{ q }}, is_public_domain={{ is_public_domain }}"
+
+  - name: GET search artworks
+    payload:
+      path: "art.edu.csv"
+      fields:
+        - q
+        - is_public_domain
+      order: sequence
+    flow:
+      - get:
+          url: "/api/v1/artworks/search"
+          qs:
+            params:
+              q: "{{ q }}"
+              query:
+                term:
+                  is_public_domain: "{{ is_public_domain }}"
+      - log: "GET → q={{ q }}, is_public_domain={{ is_public_domain }}"
