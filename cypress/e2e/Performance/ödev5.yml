@@ -4,40 +4,43 @@ config:
     - duration: 30
       arrivalRate: 5
       name: Stress Test-ödev | ilk Performans Testi
+
 plugins:
-    ensure:
-      thresholds:
-        - http.response_time.p95: 1000
-        - http.response_time.mean: 800
-        - http.request_rate: 1
+  ensure:
+    thresholds:
+      - http.response_time.p95: 1000
+      - http.response_time.mean: 800
+      - http.request_rate: 1
 
-scenarios: 
-   - name: search art works with post
-     flow: 
-       - post:
-           url: "{{target}}/api/v1/artworks/search"
-           headers: 
-             Content-Type: application/json
-    
-       - log: "POST: q={{ q }}, is_public_domain={{ is_public_domain }}"        
-
-   - name: search art works with get
-     flow:
-       - get:
-           url: "{{target}}/api/v1/artworks/search
-           qs:
-             params:
-               q: "{{ q }}"
-               query:
-                 term:
-                   is_public_domain: "{{ is_public_domain }}"
 payload:
-    - path: "art.edu.csv"
-      fields:
-        - q : 
-        - is_public_domain :
-      order: sequence              
-        
-      -log: "GET: q={{ q }}, is_public_domain={{ is_public_domain }}"
-       
-      
+  - path: "art.edu.csv"
+    fields:
+      - q
+      - is_public_domain
+    order: sequence
+
+scenarios:
+  - name: search art works with post
+    flow:
+      - post:
+          url: "{{target}}/api/v1/artworks/search"
+          headers:
+            Content-Type: application/json
+          json:
+            q: "{{ q }}"
+            query:
+              term:
+                is_public_domain: "{{ is_public_domain }}"
+
+    
+
+  - name: search art works with get
+    flow:
+      - get:
+          url: "{{target}}/api/v1/artworks/search"
+          qs:
+            q: "{{ q }}"
+            is_public_domain: "{{ is_public_domain }}"
+
+          
+
