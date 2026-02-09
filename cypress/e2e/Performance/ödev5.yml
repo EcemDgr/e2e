@@ -3,7 +3,14 @@ config:
   phases:
     - duration: 30
       arrivalRate: 5
-      name: Stress Test-ödev | ilk Performans Testi
+      name: Stress Test - İlk Performans Testi
+
+  payload:
+    - path: "art.edu.csv"
+      fields:
+        - q
+        - is_public_domain
+      order: sequence
 
 plugins:
   ensure:
@@ -12,35 +19,27 @@ plugins:
       - http.response_time.mean: 800
       - http.request_rate: 1
 
-payload:
-  - path: "art.edu.csv"
-    fields:
-      - q
-      - is_public_domain
-    order: sequence
-
 scenarios:
-  - name: search art works with post
+  - name: search art works (POST)
     flow:
       - post:
-          url: "{{target}}/api/v1/artworks/search"
+          url: "{{ target }}/api/v1/artworks/search"
           headers:
             Content-Type: application/json
           json:
             q: "{{ q }}"
             query:
               term:
-                is_public_domain: "{{ is_public_domain }}"
+                is_public_domain: {{ is_public_domain }}
+      - log: "POST → q={{ q }}, is_public_domain={{ is_public_domain }}"
 
-    
-
-  - name: search art works with get
+  - name: search art works (GET)
     flow:
       - get:
-          url: "{{target}}/api/v1/artworks/search"
+          url: "{{ target }}/api/v1/artworks/search"
           qs:
             q: "{{ q }}"
             is_public_domain: "{{ is_public_domain }}"
-
+      - log: "GET → q={{ q }}, is_public_domain={{ is_public_domain }}"
           
 
