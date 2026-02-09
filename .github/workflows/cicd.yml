@@ -16,7 +16,7 @@ jobs:
 
       steps:
         - name: Checkout repository
-          uses: actions/checkout@v3
+          uses: actions/checkout@v4
 
         - name: Echo user login
           run: echo "Hello, ${{ github.actor }}"
@@ -24,22 +24,25 @@ jobs:
     test: #ikinci job ismi
         runs-on: ubuntu-latest
         name: Cypress Testing
+        needs: build
+        
         container:
-          image:cypress/base:latest #cypress için hazır docker imajı kullanıyoruz(kurulur)
+          image: cypress/base:latest #cypress için hazır docker imajı kullanıyoruz(kurulur)
+        
         steps:
         - name: Set up Node.js  #node kurulumu
-          uses: actions/setup-node@v3 
+          uses: actions/setup-node@v4
           with:
             node-version: '18' 
 
         - name: Install dependencies 
           run: npm install
 
-        - name: Run tests
-          run: npm test
+        - name: Run Cypress tests
+          run: npx cypress run
 
         - name: Build project
-          run: npm run build
+          run: npx run build
 
         - name: Upload test videos
           if: always() #testler basarisiz olsa bile videolari yukler

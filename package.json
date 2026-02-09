@@ -1,17 +1,41 @@
 {
-  "name": "ders1",
+  "name": "cypress-cucumber-automation",
   "version": "1.0.0",
-  "description": "",
+  "description": "Cypress ve Cucumber kullanarak oluşturulmuş test otomasyon framework'ü",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "cypress run",
+    "test:headed": "cypress run --headed",
+    "test:open": "cypress open",
+    "test:tag": "cypress run --env TAGS='@smoke'",
+    "test:tag:headed": "cypress run --headed --env TAGS='@tc01'",
+    "test:smoke": "cypress run --env TAGS='@smoke or @critical'",
+    "test:smoke:headed": "cypress run --headed --env TAGS='@smoke or @critical'"
   },
-  "keywords": [],
+  "keywords": [
+    "cypress",
+    "cucumber",
+    "bdd",
+    "test-automation",
+    "javascript",
+    "e2e-testing"
+  ],
   "author": "",
-  "license": "ISC",
-  "type": "commonjs",
+  "license": "MIT",
   "devDependencies": {
-    "artillery": "^2.0.29",
-    "cypress": "^15.9.0"
+    "@badeball/cypress-cucumber-preprocessor": "^20.1.2",
+    "@bahmutov/cypress-esbuild-preprocessor": "^2.2.8",
+    "cypress": "^13.6.0",
+    "esbuild": "^0.19.0"
+  },
+  "cypress-cucumber-preprocessor": {
+    "nonGlobalStepDefinitions": false,
+    "stepDefinitions": "cypress/e2e/step_definitions/**/*.{js,ts}",
+    "cucumberJson": {
+      "generate": true,
+      "outputFolder": "cypress/reports/cucumber-json",
+      "filePrefix": "",
+      "fileSuffix": ".cucumber"
+    }
   }
 }
